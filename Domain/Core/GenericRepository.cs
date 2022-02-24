@@ -24,7 +24,7 @@ namespace Domain
             return t;
         }
 
-        public async Task<ICollection<T>> AddRangeAsync(ICollection<T> tCollection)
+        public async Task<ICollection<T>> InsertBulkAsync(ICollection<T> tCollection)
         {
             try
             {
@@ -41,14 +41,38 @@ namespace Domain
            
         }
 
-        public async Task<ICollection<T>> GetAllAsync(Expression<Func<T, bool>> match, Pagination pagination = null)
+        public async Task<ICollection<T>> BulkInsertOrUpdateAsync(ICollection<T> tCollection)
         {
-            if (pagination != null)
+            try
+            {
+                var list = tCollection.ToList();
+                 _context.BulkInsertOrUpdate(list);
+                 _context.SaveChanges();
+                return tCollection;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+           
+        }
+
+        public async Task<ICollection<T>> GetAllAsync(Expression<Func<T, bool>> match = null,
+            Pagination pagination = null)
+        {
+            if (pagination != null && match != null)
             {
                 pagination.totalCount = _context.Set<T>().Where(match).Count();
                 return await _context.Set<T>().Where(match).Skip(pagination.skip).Take(pagination.size).ToListAsync();
             }
-            return _context.Set<T>().Where(match).ToList();
+            else if (pagination != null)
+            {
+                pagination.totalCount = _context.Set<T>().Count();
+                return await _context.Set<T>().Skip(pagination.skip).Take(pagination.size).ToListAsync();
+            }
+
+            return await _context.Set<T>().Where(match).ToListAsync();
         }
     }
 }

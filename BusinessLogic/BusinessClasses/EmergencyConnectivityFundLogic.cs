@@ -16,14 +16,24 @@ namespace BusinessLogic
             //_context = context;
             _emergencyConnectivityFundRepository = emergencyConnectivityFundRepository;
         }
-        public async Task AddRangeAsync(IEnumerable<EmergencyConnectivityFund> collecetion) 
+        public async Task InsertBulkAsync(IEnumerable<EmergencyConnectivityFund> collecetion) 
         {
-          await _emergencyConnectivityFundRepository.AddRangeAsync(collecetion.ToList());
+          await _emergencyConnectivityFundRepository.InsertBulkAsync(collecetion.ToList());
         }
 
-        public Task<IEnumerable<EmergencyConnectivityFund>> GetAll(Pagination pagination = null)
+        public async Task BulkInsertOrUpdateAsync(IEnumerable<EmergencyConnectivityFund> collecetion) 
         {
-            throw new NotImplementedException();
+          await _emergencyConnectivityFundRepository.BulkInsertOrUpdateAsync(collecetion.ToList());
+        }
+
+        public async Task<IEnumerable<EmergencyConnectivityFund>> GetAll(Pagination pagination = null)
+        {
+            return await _emergencyConnectivityFundRepository.GetAllAsync(null, pagination);
+        }
+        public async Task<IEnumerable<string>> GetAllServiceProviderName(string serviceProviderName = null, Pagination pagination = null)
+        {
+            return await _emergencyConnectivityFundRepository.GetAllServiceProviderName(
+                e => serviceProviderName == null || e.ServiceProviderName.ToLower() == serviceProviderName.ToLower(), pagination);
         }
 
         public Task<EmergencyConnectivityFund> Update(EmergencyConnectivityFund e)

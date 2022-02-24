@@ -10,7 +10,9 @@ namespace BusinessLogic
     public interface IEmergencyConnectivityFundLogic
     {
         Task<IEnumerable<EmergencyConnectivityFund>> GetAll(Pagination pagination = null);
+        Task<IEnumerable<string>> GetAllServiceProviderName(string serviceProviderName = null, Pagination pagination = null);
         Task<EmergencyConnectivityFund> Update(EmergencyConnectivityFund e);
-        Task AddRangeAsync(IEnumerable<EmergencyConnectivityFund> collection);
+        Task InsertBulkAsync(IEnumerable<EmergencyConnectivityFund> collection);
+        Task BulkInsertOrUpdateAsync(IEnumerable<EmergencyConnectivityFund> collection);
     }
 }

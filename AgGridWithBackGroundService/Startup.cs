@@ -28,7 +28,9 @@ namespace AgGridWithBackGroundService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            //services.AddControllers(options => options.EnableEndpointRouting = false);
+            services.AddControllersWithViews(options => options.EnableEndpointRouting = false);
+
             services.AddHostedService<HostedService>();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DBConnection"), b => b.MigrationsAssembly(GetType().Assembly.FullName)));
@@ -50,9 +52,21 @@ namespace AgGridWithBackGroundService
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllers();
+            //});
+
+            app.UseMvc(routes =>
             {
-                endpoints.MapControllers();
+                // You can add all the routes you need here
+
+                // And the default route :
+                routes.MapRoute(
+                    name: "default_route",
+                    template: "{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "Index" }
+                );
             });
         }
     }

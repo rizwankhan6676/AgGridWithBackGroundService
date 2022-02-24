@@ -12,6 +12,10 @@ namespace AgGridWithBackGroundService.Controllers
     {
         private readonly IEmergencyConnectivityFundLogic _emergencyConnectivityFundLogic;
 
+        public IActionResult Index()
+        {
+            return View();
+        }
         public EmergencyConnectivityFundController(IEmergencyConnectivityFundLogic emergencyConnectivityFundLogic)
         {
             _emergencyConnectivityFundLogic = emergencyConnectivityFundLogic;
@@ -20,6 +24,12 @@ namespace AgGridWithBackGroundService.Controllers
         public async Task<IEnumerable<EmergencyConnectivityFund>> GetAll([FromQuery] Pagination pagination = null)
         {
             return await _emergencyConnectivityFundLogic.GetAll(pagination);
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<string>> GetAllServiceProviders(string serviceprovidername, [FromQuery] Pagination pagination = null)
+        {
+            return await _emergencyConnectivityFundLogic.GetAllServiceProviderName(serviceprovidername, pagination);
         }
     }
 }

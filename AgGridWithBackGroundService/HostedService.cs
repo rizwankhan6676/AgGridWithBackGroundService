@@ -30,10 +30,10 @@ namespace AgGridWithBackGroundService
 
         public Task StartAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Timed Hosted Service running.");
+            //_logger.LogInformation("Timed Hosted Service running.");
 
-            _timer = new Timer(DoWork, null, TimeSpan.Zero,
-                TimeSpan.FromDays(1));
+            //_timer = new Timer(DoWork, null, TimeSpan.Zero,
+            //    TimeSpan.FromDays(7));
 
             return Task.CompletedTask;
         }
@@ -57,7 +57,7 @@ namespace AgGridWithBackGroundService
             IEmergencyConnectivityFundLogic scopedProcessingService =
                 scope.ServiceProvider.GetRequiredService<IEmergencyConnectivityFundLogic>();
 
-            scopedProcessingService.AddRangeAsync(emergencyConnectivityFunds);
+            scopedProcessingService.BulkInsertOrUpdateAsync(emergencyConnectivityFunds);
         }
 
         public Task StopAsync(CancellationToken stoppingToken)
